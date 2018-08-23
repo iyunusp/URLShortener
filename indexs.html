@@ -1,0 +1,87 @@
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Cook Book login</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=0">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>	
+	</head>
+	<body>
+
+		<div id="main" class="container-fluid">
+		<style type="text/css">
+		body{
+			background-color: orange;
+		}	
+			#main{
+				width: 500px;
+				height: 500px;
+				top: 100px;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				position: absolute;
+
+			}
+			form{
+				background-color: white;
+				width: 450px;
+				height: 255px;
+				position: absolute;
+				top:0;
+				bottom: 10px;
+				left: 0;
+				right: 0;
+				margin: auto;
+				border-radius: 8px;
+				border: 2px grey solid;
+			}
+			.email{
+				top:10px;
+				width: 300px;
+			}
+			#alert {
+				width:250px; 
+				position: static;
+				transition: 1s;
+			}
+		</style>
+
+
+		</style>
+			<center>
+				<font face="calibri" size="20px" style="color:white;" >URL Shortening</font>
+			</center>
+				<center><br>Make Custom Shortcut For your favorite Web
+					<div class="form-group has-feedback email">
+						<input type="text" class="form-control" placeholder="Shortcut" id="Shortcut" name="Shortcut" required/>
+						<b class="glyphicon form-control-feedback"></b>
+					</div>
+					<div class="form-group has-feedback email">
+						<input type="text" class="form-control" placeholder="Url" id="Url" name="Url" required/>
+						<b class="glyphicon form-control-feedback"></b>
+					</div>
+				</center>
+				<div style="position: relative;top:10px;">
+					<button type="submit" class="btn btn-primary" style="left: 188px; position: relative;" id="btnSubmit" onclick="check()">Submit</button>
+				</div>
+
+				<br>
+		</div>
+		<script>
+			function check(){
+				Url=$("#Url").val();
+				Shortcut=$("#Shortcut").val();
+				if(Url =="" || Shortcut == "") {
+					alert("Please Fill all the Input")
+					return;
+				}
+				$.getJSON("/make/"+Shortcut+"?url="+Url,function(data){
+					alert(data["status"])
+				});
+			}
+		</script>
+	</body>
+	</html>
