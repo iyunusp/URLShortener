@@ -1,6 +1,6 @@
 
 from gevent.pywsgi import WSGIServer
-from flask import Flask, request, abort, Response, jsonify, send_file,redirect
+from flask import Flask, request, abort, Response, jsonify, send_file,redirect,url_for
 from flaskext.mysql import MySQL
 
 import warnings
@@ -11,8 +11,8 @@ import re
 
 
 logger= logging.getLogger(__name__)
-#class for line server
 class ShortenerServer(object):
+    """Class For URL Shortcut Maker"""
     app=Flask(__name__)
     agent=None
     users_inProcess={}
@@ -23,8 +23,8 @@ class ShortenerServer(object):
     app.config["MYSQL_DATABASE_DB"]="aea"
     app.config["MYSQL_DATABASE_HOST"]="0.0.0.0"
     mysql.init_app(app)
-    #engine=create_engine("mysql://aea:Xd4Y-2qA!7vr@den1.mysql4.gear.host/aea")
     """
+    --store procedure for check and create rather the shotcut is already used or not 
     DROP PROCEDURE IF EXISTS proc_shortener;
     DELIMITER //
     create PROCEDURE proc_shortener (
@@ -42,14 +42,12 @@ class ShortenerServer(object):
     DELIMITER ;
     
     """
-    "UPDATE `mysql`.`proc` p SET definer = 'iyunusp@%' WHERE definer='aea@%'"
-    #utils.configure_file_logging("DEBUG","asd.log")
     def __init__(self):
         import os
         dir=os.path.dirname(os.path.realpath(__file__))
         @self.app.route("/", methods=['GET', 'OPTIONS'])
         def UI():
-            """Chatt"""
+            """Web Interface for sCreating new URL Shortcut"""
             return send_file("indexs.html")
         
         @self.app.route("/<shortcut>", methods=['GET', 'OPTIONS'])
@@ -59,17 +57,18 @@ class ShortenerServer(object):
                 conn=self.mysql.connect()
                 data=()
                 with conn.cursor() as cursor:
-                    cursor.execute("SELECT * FROM shortener WHERE shortcut = %s LIMIT 1",(shortcut))
+                    cursor.execute("SELECT url FROM shortener WHERE shortcut = %s LIMIT 1",(shortcut))
                     data=cursor.fetchall()
-                url=data[0][1]
+                url=data[0][0]
                 return redirect(url,code=302)
             except:
-                return redirect('/',code=302)
+                return redirect(url_for('UI'),code=302)
             
-        @self.app.route("/make/<shortcut>", methods=['GET', 'OPTIONS'])
+        @self.app.route("/make/<shortcut>", methods=['POST', 'OPTIONS'])
         def make(shortcut):
-            """checking web status"""
+            """API for creating new URL Shortcut"""
             body = request_parameters()
+            print(body)
             url=body.pop("url")
             status=self.valid(shortcut,url)
             if not status["success"]:
@@ -81,10 +80,9 @@ class ShortenerServer(object):
                 data=cursor.fetchall()
                 if len(data) == 0:
                     conn.commit()
-                    #print(data)
                     status["status"]="shortcut created succesfully"
                 else:
-                    status["status"]="duplicate shortcut"
+                    status["status"]="shortcut already in used"
                     status["success"]=False
             except:
                 status["status"]="Connection Failed"
@@ -93,10 +91,12 @@ class ShortenerServer(object):
 
         @self.app.route("/image/<path>", methods=['GET', 'OPTIONS'])
         def image(path):
+            """Image API for getting Image that stored in image folder"""
             return send_file(dir+"/image/"+path,mimetype="image/*")
         
         def request_parameters():
-            if request.method == 'GET':
+            availableMethod=['POST','GET']
+            if request.method in availableMethod:
                 return request.args.to_dict()
             else:
                 try:
@@ -104,6 +104,7 @@ class ShortenerServer(object):
                 except ValueError as e:
                     pass
     def valid(self,shortcut,url):
+        "form validator"
         reg=re.compile(r'^[a-zA-Z0-9]{1,14}$')
         status={"status":"","success":False}
         if len(shortcut) == 0 or len(url)==0:
@@ -113,7 +114,7 @@ class ShortenerServer(object):
         elif re.match(reg,shortcut) is None:
             status["status"]="shortcut must be alphanumeric"
         elif shortcut == "make":
-            status["status"]="can't use reserved path"
+            status["status"]="shortcut already in used"
         elif check(url) is not True:
             status["status"]="url is invalid"
         else:
@@ -123,6 +124,7 @@ class ShortenerServer(object):
         
         
     def startApp(self):
+        """Start the Server using WSGI"""
         http_server = WSGIServer(('0.0.0.0', 5005), self.app)
         logger.info("Up and running")
         try:

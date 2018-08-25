@@ -1,7 +1,7 @@
 	<!DOCTYPE html>
 	<html>
 	<head>
-		<title>Cook Book login</title>
+		<title>URL Shortcut</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=0">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -52,9 +52,9 @@
 
 		</style>
 			<center>
-				<font face="calibri" size="20px" style="color:white;" >URL Shortening</font>
+				<font face="calibri" size="20px" style="color:white;" >URL Custom Shortcut</font>
 			</center>
-				<center><br>Make Custom Shortcut For your favorite Web
+				<center><br>Make Custom Shortcut For your favourite URL
 					<div class="form-group has-feedback email">
 						<input type="text" class="form-control" placeholder="Shortcut" id="Shortcut" name="Shortcut" required/>
 						<b class="glyphicon form-control-feedback"></b>
@@ -65,7 +65,7 @@
 					</div>
 				</center>
 				<div style="position: relative;top:10px;">
-					<button type="submit" class="btn btn-primary" style="left: 188px; position: relative;" id="btnSubmit" onclick="check()">Submit</button>
+					<button type="submit" class="btn btn-primary" style="left: 188px; position: relative;" id="btnSubmit" onclick="check()">Create</button>
 				</div>
 
 				<br>
@@ -78,9 +78,9 @@
 					alert("Please Fill all the Input")
 					return;
 				}
-				$.getJSON("/make/"+Shortcut+"?url="+Url,function(data){
+				$.post("/make/"+Shortcut+"?url="+Url,function(data){
 					alert(data["status"])
-				});
+				},'json');
 			}
 		</script>
 	</body>
