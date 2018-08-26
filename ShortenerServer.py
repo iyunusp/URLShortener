@@ -68,7 +68,6 @@ class ShortenerServer(object):
         def make(shortcut):
             """API for creating new URL Shortcut"""
             body = request_parameters()
-            print(body)
             url=body.pop("url")
             status=self.valid(shortcut,url)
             if not status["success"]:

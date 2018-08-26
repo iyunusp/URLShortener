@@ -4,6 +4,8 @@
 		<title>URL Shortcut</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=0">
+		<link rel="shortcut icon" href="/image/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="/image/favicon.ico" type="image/x-icon">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>	
@@ -13,7 +15,7 @@
 		<div id="main" class="container-fluid">
 		<style type="text/css">
 		body{
-			background-color: orange;
+			background-color: #CCCCCC;
 		}	
 			#main{
 				width: 500px;
@@ -47,6 +49,38 @@
 				position: static;
 				transition: 1s;
 			}
+			.tooltiptext {
+				visibility: hidden;
+				width: 140px;
+				background-color: #555;
+				color: #fff;
+				text-align: center;
+				border-radius: 6px;
+				padding: 5px;
+				position: absolute;
+				z-index: 1;
+				bottom: 150%;
+				left: 50%;
+				margin-left: -75px;
+				opacity: 0;
+				transition: opacity 0.3s;
+			}
+
+			.tooltiptext::after {
+				content: "";
+				position: absolute;
+				top: 100%;
+				left: 50%;
+				margin-left: -5px;
+				border-width: 5px;
+				border-style: solid;
+				border-color: #555 transparent transparent transparent;
+			}
+
+			#resultArea:hover .tooltiptext {
+				visibility: visible;
+				opacity: 1;
+			}
 		</style>
 
 
@@ -63,23 +97,48 @@
 						<input type="text" class="form-control" placeholder="Url" id="Url" name="Url" required/>
 						<b class="glyphicon form-control-feedback"></b>
 					</div>
+					<div style="position: relative;">
+						<button type="submit" class="btn btn-primary" style="position: relative;" id="btnSubmit" onclick="check()">Create</button>
+					</div>
+					<div class="form-group has-feedback email" id="resultArea">
+						<span class="tooltiptext" id="copyTooltip">Copy to clipboard</span>
+						<input readonly type="text" id="result" class="form-control" onclick="copy()" onmouseout="out()" />
+						<b class="glyphicon form-control-feedback"></b>
+					</div>
 				</center>
-				<div style="position: relative;top:10px;">
-					<button type="submit" class="btn btn-primary" style="left: 188px; position: relative;" id="btnSubmit" onclick="check()">Create</button>
-				</div>
-
 				<br>
 		</div>
 		<script>
+			let urlID=$("#Url");
+			let shortcutID=$("#Shortcut");
+			let resultID=$("#result");
+			let resultArea=$("#resultArea");
+			let prefixLink= window.location.hostname+"/";  
+			let copyTooltip=$("#copyTooltip");
+			resultArea.hide();
+			function out(){
+				copyTooltip.html("Copy to clipboard");
+			}
+			function copy(){
+				resultID.focus();
+				resultID.select();
+				document.execCommand('copy');
+				copyTooltip.html("Link Copied");
+			}
 			function check(){
-				Url=$("#Url").val();
-				Shortcut=$("#Shortcut").val();
+				Url=urlID.val();
+				Shortcut=shortcutID.val();
 				if(Url =="" || Shortcut == "") {
 					alert("Please Fill all the Input")
 					return;
 				}
 				$.post("/make/"+Shortcut+"?url="+Url,function(data){
-					alert(data["status"])
+					alert(data["status"]);
+					if(data["success"]){
+						let link=prefixLink+Shortcut
+						resultID.val(link);
+						resultArea.show();
+					}else resultArea.hide();
 				},'json');
 			}
 		</script>
