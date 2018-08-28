@@ -27,16 +27,23 @@ class ShortenerServer(object):
     --store procedure for check and create rather the shotcut is already used or not 
     DROP PROCEDURE IF EXISTS proc_shortener;
     DELIMITER //
-    create PROCEDURE proc_shortener (
-        IN p_shortcut varchar(15),
-        IN p_url text
+    CREATE PROCEDURE proc_shortener(
+        IN p_shortcut VARCHAR(15),
+        IN p_url TEXT
     )
     BEGIN
-            IF(SELECT EXISTS (SELECT 1 FROM shortener WHERE shortcut = p_shortcut)) THEN
-            SELECT 'Failed';
-        ELSE
-            INSERT INTO shortener(shortcut,url) VALUES (p_shortcut,p_url);
-        END IF;
+            IF( SELECT EXISTS( SELECT 1 FROM shortener WHERE shortcut = p_shortcut)) THEN 
+                IF(p_url = '-') THEN
+                    UPDATE shortener SET hit = hit +1 WHERE shortcut = p_shortcut ; 
+                    SELECT url FROM shortener WHERE shortcut = p_shortcut ;
+                ELSE
+                    SELECT 'Failed'; 
+                END IF ; 
+            ELSE
+                IF(p_url != '-') THEN
+                    INSERT INTO shortener(shortcut, url) VALUES(p_shortcut, p_url) ;
+                END IF ;
+            END IF ;
     END
     //
     DELIMITER ;
@@ -57,9 +64,10 @@ class ShortenerServer(object):
                 conn=self.mysql.connect()
                 data=()
                 with conn.cursor() as cursor:
-                    cursor.execute("SELECT url FROM shortener WHERE shortcut = %s LIMIT 1",(shortcut))
+                    cursor.callproc("proc_shortener",(shortcut,'-'))
                     data=cursor.fetchall()
                 url=data[0][0]
+                conn.commit()
                 return redirect(url,code=302)
             except:
                 return redirect(url_for('UI'),code=302)
@@ -109,7 +117,9 @@ class ShortenerServer(object):
         if len(shortcut) == 0 or len(url)==0:
             status["status"]="all field must be filled"
         elif len(shortcut) > 15:
-            status["status"]="must be less than 15 character"
+            status["status"]="shortcut must be less than 15 character"
+        elif len(url) > 2000:
+            status["status"]="url must be less than 2000 character"
         elif re.match(reg,shortcut) is None:
             status["status"]="shortcut must be alphanumeric"
         elif shortcut == "make":
