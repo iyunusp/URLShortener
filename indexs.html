@@ -8,7 +8,7 @@
 	<link rel="icon" href="/image/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -43,24 +43,23 @@
 			top:10px;
 			width: 350px;
 		}
-		.tooltiptext {
+		#resultArea #copyTooltip {
 			visibility: hidden;
-			width: 140px;
+			width: 50%;
 			background-color: #555;
 			color: #fff;
 			text-align: center;
 			border-radius: 6px;
 			padding: 5px;
 			position: absolute;
+			margin-left: -25%;
+			margin-top: -7%;
 			z-index: 1;
-			bottom: 150%;
-			left: 50%;
-			margin-left: -75px;
 			opacity: 0;
-			transition: opacity 0.3s;
+			transition: opacity 0.4s;
 		}
-		.tooltiptext::after {
-			content: "";
+		#resultArea #copyTooltip::after {
+			content: ".";
 			position: absolute;
 			top: 100%;
 			left: 50%;
@@ -69,32 +68,32 @@
 			border-style: solid;
 			border-color: #555 transparent transparent transparent;
 		}
-		#resultArea:hover .tooltiptext {
+		#resultArea:hover #copyTooltip {
 			visibility: visible;
 			opacity: 1;
 		}
 	</style>
 
 
-	</style>
+	
 		<center>
-			<font face="calibri" size="20px" style="color:white;" >URL Custom Shortcut</font>
+			<font face="calibri" size="20px" style="color:white;">URL Custom Shortcut</font>
 		</center>
 			<center><br>Make Custom Shortcut For your favourite URL<br> .
 				<div class="form-group fields">
-					<input type="text" class="form-control" placeholder="Shortcut" id="Shortcut" name="Shortcut" required/>
+					<input type="text" class="form-control" placeholder="Shortcut" id="Shortcut" name="Shortcut" required="">
 					<b class="glyphicon form-control-feedback"></b>
 				</div>
 				<div class="form-group fields">
-					<input type="text" class="form-control" placeholder="Url" id="Url" name="Url" required/>
+					<input type="text" class="form-control" placeholder="Url" id="Url" name="Url" required="">
 					<b class="glyphicon form-control-feedback"></b>
 				</div>
-				<div style="position: relative;">
-					<button type="submit" class="btn btn-primary" style="position: relative;" id="btnSubmit" onclick="check()">Create</button>
+				<div style="position: relative;" class="form-group">
+					<button type="submit" class="btn btn-primary" id="btnSubmit" onclick="check()">Create</button>
 				</div>
 				<div class="form-group fields" id="resultArea">
-					<span class="tooltiptext" id="copyTooltip">Copy to clipboard</span>
-					<input readonly type="text" id="result" class="form-control" onclick="copy()" onmouseout="out()" />
+					<span id="copyTooltip">Click to Copy to Clipboard</span>
+					<input readonly type="text" id="result" class="form-control" onclick="copy()" onmouseout="out()">
 					<b class="glyphicon form-control-feedback"></b>
 				</div>
 			</center>
@@ -109,7 +108,7 @@
 		let copyTooltip=$("#copyTooltip");
 		resultArea.hide();
 		function out(){
-			copyTooltip.html("Copy to clipboard");
+			copyTooltip.html("Click to Copy to Clipboard");
 		}
 		function copy(){
 			resultID.focus();
@@ -136,5 +135,6 @@
 			},'json');
 		}
 	</script>
+
 </body>
 </html>
