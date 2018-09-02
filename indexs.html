@@ -16,48 +16,7 @@
 	<style type="text/css">
 	body{
 		background-color: #CCCCCC;
-	}	
-		#main{
-			width: 500px;
-			height: 500px;
-			top: 100px;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			position: absolute;
-		}
-		form{
-			background-color: white;
-			width: 450px;
-			height: 255px;
-			position: absolute;
-			top:0;
-			bottom: 10px;
-			left: 0;
-			right: 0;
-			margin: auto;
-			border-radius: 8px;
-			border: 2px grey solid;
-		}
-		.fields{
-			top:10px;
-			width: 350px;
-		}
-		#resultArea #copyTooltip {
-			visibility: hidden;
-			width: 50%;
-			background-color: #555;
-			color: #fff;
-			text-align: center;
-			border-radius: 6px;
-			padding: 5px;
-			position: absolute;
-			margin-left: -25%;
-			margin-top: -7%;
-			z-index: 1;
-			opacity: 0;
-			transition: opacity 0.4s;
-		}
+	}
 		#resultArea #copyTooltip::after {
 			content: ".";
 			position: absolute;
@@ -72,12 +31,129 @@
 			visibility: visible;
 			opacity: 1;
 		}
+		@media screen and (max-height: 2201px){
+			#titles{
+				color:white;
+				font-size:50px;
+			}
+			#main{
+				width: 70%;
+				min-width: 550px;
+				height: 0.2vh;
+				top: 100px;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				position: absolute;
+			}
+			form{
+				background-color: white;
+				width: 50%;
+				height: 255px;
+				position: absolute;
+				top:0;
+				bottom: 10px;
+				left: 0;
+				right: 0;
+				margin: auto;
+				border-radius: 8px;
+				border: 2px grey solid;
+			}
+			.fields{
+				top:15px;
+				width: 350px;
+				min-width: 350px;
+				max-width: 350px;
+			}
+			#resultArea #copyTooltip {
+				visibility: hidden;
+				width: 250px;
+				
+				background-color: #555;
+				color: #fff;
+				text-align: center;
+				border-radius: 6px;
+				padding: 5px;
+				position: absolute;
+				margin-left: -125px;
+				margin-top: -35px;
+				z-index: 1;
+				opacity: 0;
+				transition: opacity 0.4s;
+			}
+		}
+		@media screen and (max-width: 1800px) and (min-height: 2200px){
+			#titles{
+				color: white;
+				font-size:140px;
+			}
+			#main{
+				width: 100%;
+				min-width: 550px;
+				height: 0.2vh;
+				top: 300px;
+				
+				bottom: 0;
+				left: 0;
+				right: 0;
+				position: absolute;
+				font-size:60px;
+			}
+			form{
+				background-color: white;
+				width: 100%;
+				position: absolute;
+				top:0;
+				bottom: 60px;
+				left: 0;
+				right: 0;
+				margin: auto;
+				border-radius: 8px;
+				border: 2px grey solid;
+			}
+			.fields{
+				top:40px;
+				width: 95%;
+				min-width: 1250px;
+				margin-bottom: 50px;
+			}
+			.fields input{
+				top:10px;
+				height: 90px;
+				font-size:50px;
+			}
+			#btnSubmit{
+				top:10px;
+				width: 30%;
+				min-width: 600px;
+				height: 90px;
+				font-size:50px;
+				margin-bottom: 50px;
+			}
+			#resultArea #copyTooltip {
+				visibility: hidden;
+				width: 70%;
+				background-color: #555;
+				color: #fff;
+				text-align: center;
+				border-radius: 6px;
+				padding: 5px;
+				position: absolute;
+				margin-left: -35%;
+				margin-top: -7%;
+				z-index: 1;
+				opacity: 0;
+				transition: opacity 0.4s;
+			}
+		}
+
+}
 	</style>
 
 
 	
 		<center>
-			<font face="calibri" size="20px" style="color:white;">URL Custom Shortcut</font>
+			<font id="titles" face="calibri">URL Custom Shortcut</font>
 		</center>
 			<center><br>Make Custom Shortcut For your favourite URL<br> .
 				<div class="form-group fields">
